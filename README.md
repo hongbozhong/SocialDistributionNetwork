@@ -1,0 +1,2 @@
+# SocialDistributionNetwork
+simple decentralized network

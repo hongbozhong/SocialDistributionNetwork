@@ -6,11 +6,16 @@ import uuid
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password):
+    def create_user(self, email, password, *args, **kargs):
         if not email or not password:
             raise ValueError('empty email or password')
-        user = self.model(email=self.normalize_email(email))
-        user.username = 'user'+str(len(self.model.objects.all()))
+        try:
+            user = self.model(email=self.normalize_email(email), *args, **kargs)
+        except Exception as e:
+            raise e
+        
+        if not user.username:
+            user.username = 'user'+str(len(self.model.objects.all()))
         user.set_password(password)
         user.save()
         return user
@@ -19,7 +24,9 @@ class UserManager(BaseUserManager):
         user = self.create_user(email, password)
         user.is_admin = True
         return user
-
+    
+    def create(self, *args, **kargs):
+        return self.create_user(*args, **kargs)
 
 class User(AbstractBaseUser):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)

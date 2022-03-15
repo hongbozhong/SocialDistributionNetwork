@@ -17,7 +17,7 @@ class PostAdmin(admin.ModelAdmin):
     ]
 
 class CustomUserAdmin(UserAdmin):
-    list_display = ('email', 'username', 'is_admin', 'created_at')
+    list_display = ('email', 'username', 'password', 'created_at', 'is_active', 'is_admin')
     list_filter = ('is_admin', )
     fieldsets = (
         (None, {'fields': ('email', 'password', 'is_active')}),
@@ -34,6 +34,7 @@ class CustomUserAdmin(UserAdmin):
     )
 
     filter_horizontal = ()
+    ordering = ('created_at', )
 
 admin.site.register(Post, PostAdmin)
 admin.site.register(User, CustomUserAdmin)

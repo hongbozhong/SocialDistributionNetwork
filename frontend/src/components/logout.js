@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import axiosInstance from '../axios';
 import { useNavigate } from 'react-router-dom';
 
-export default function SignUp() {
+export default function Logout() {
 	const history = useNavigate();
 
 	useEffect(() => {

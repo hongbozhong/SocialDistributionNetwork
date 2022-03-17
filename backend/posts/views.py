@@ -39,6 +39,7 @@ class PostView(APIView):
             post = self.model.objects.create(**request.data)
             return Response(self.serializer(post).data)
         except Exception as e:
+            print(e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
     
 
@@ -68,7 +69,7 @@ class CommentView(APIView):
 
 class UserView(APIView):
     authentication_classes = []
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = []
     model = User
     serializer = UserSerializer
 
@@ -93,6 +94,7 @@ class UserView(APIView):
             serial_res = self.serializer(user)
             return Response(serial_res.data)
         except Exception as e:
+            print(e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
 
@@ -100,7 +102,7 @@ class UserView(APIView):
 
 
 class BlacklistTokenUpdateView(APIView):
-    permission_classes = [authentication.AllowAny]
+    permission_classes = []
     authentication_classes = ()
 
     def post(self, request):

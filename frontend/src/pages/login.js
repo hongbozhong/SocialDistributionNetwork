@@ -15,7 +15,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../axios';
+import axiosInstance from '../components/axios';
 
 function Copyright(props) {
   return (
@@ -33,25 +33,29 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
-  const history = useNavigate();
-  const [formdata, updateformdata] = useState();
+	const navigate = useNavigate()
+	const [formdata, updataformdata] = useState()
 
-  const handleChange = (e) => {
-    updateformdata({
-      	...formdata,
-      	[e.target.name]: e.target.value,
-    });
-  }
+	const handleChange = (e) => {
+		updataformdata({
+			...formdata,
+			[e.target.name]: e.target.value,
+		});
+	}
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    axiosInstance.post('users/', {
-      	'email': formdata.email,
-      	'password': formdata.password
-    }).then((res) => {
-      	history.push('login/')
-    })
-  };
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		console.log(formdata);
+		axiosInstance.post('api/token/', {
+			email: formdata.email,
+			password: formdata.password
+		}).then((res) => {
+			localStorage.setItem('refresh_token', res.data.refresh)
+			localStorage.setItem('access_token', res.data.access)
+			axiosInstance.defaults.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token')
+			navigate('/')
+		})
+	};
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -85,7 +89,7 @@ export default function SignInSide() {
 				<LockOutlinedIcon />
 				</Avatar>
 				<Typography component="h1" variant="h5">
-				Register
+				Sign in
 				</Typography>
 				<Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
 				<TextField
@@ -120,14 +124,17 @@ export default function SignInSide() {
 					variant="contained"
 					sx={{ mt: 3, mb: 2 }}
 				>
-					Register
+					Sign In
 				</Button>
 				<Grid container>
 					<Grid item xs>
+					<Link href="#" variant="body2">
+						Forgot password?
+					</Link>
 					</Grid>
 					<Grid item>
-					<Link href="#" variant="body2">
-						{"Already have an account? Sign In"}
+					<Link href="/register" variant="body2">
+						{"Don't have an account? Register"}
 					</Link>
 					</Grid>
 				</Grid>
@@ -138,4 +145,4 @@ export default function SignInSide() {
 		</Grid>
 		</ThemeProvider>
 	);
-}
+	}

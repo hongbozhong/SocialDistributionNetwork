@@ -1,10 +1,10 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import React from 'react'
 import ReactDOM from 'react-dom';
-import Login from './components/login'
-import Logout from './components/logout'
-import Register from './components/register'
-import Home from './Home'
+import Login from './pages/login'
+import Logout from './pages/logout'
+import Register from './pages/register'
+import Home from './pages/home'
 
 
 ReactDOM.render(

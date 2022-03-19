@@ -10,13 +10,12 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import AcUnitIcon from '@mui/icons-material/AcUnit';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../axios';
+import axiosInstance from '../components/axios';
 
 function Copyright(props) {
   return (
@@ -34,29 +33,25 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
-	const history = useNavigate()
-	const [formdata, updataformdata] = useState()
+  const navigate = useNavigate();
+  const [formdata, updateformdata] = useState();
 
-	const handleChange = (e) => {
-		updataformdata({
-			...formdata,
-			[e.target.name]: e.target.value,
-		});
-	}
+  const handleChange = (e) => {
+    updateformdata({
+      	...formdata,
+      	[e.target.name]: e.target.value,
+    });
+  }
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		console.log(formdata);
-		axiosInstance.post('api/token', {
-			email: formdata.email,
-			password: formdata.password
-		}).then((res) => {
-			localStorage.setItem('refresh_token', res.data.refresh)
-			localStorage.setItem('access_token', res.data.access)
-			axiosInstance.defaults.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token')
-			history.push('/')
-		})
-	};
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    axiosInstance.post('users/', {
+      	'email': formdata.email,
+      	'password': formdata.password
+    }).then((res) => {
+		navigate('/login');
+    })
+  };
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -90,7 +85,7 @@ export default function SignInSide() {
 				<LockOutlinedIcon />
 				</Avatar>
 				<Typography component="h1" variant="h5">
-				Sign in
+				Register
 				</Typography>
 				<Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
 				<TextField
@@ -113,7 +108,7 @@ export default function SignInSide() {
 					type="password"
 					id="password"
 					autoComplete="current-password"
-					onChange={{handleChange}}
+					onChange={handleChange}
 				/>
 				<FormControlLabel
 					control={<Checkbox value="remember" color="primary" />}
@@ -125,17 +120,14 @@ export default function SignInSide() {
 					variant="contained"
 					sx={{ mt: 3, mb: 2 }}
 				>
-					Sign In
+					Register
 				</Button>
 				<Grid container>
 					<Grid item xs>
-					<Link href="#" variant="body2">
-						Forgot password?
-					</Link>
 					</Grid>
 					<Grid item>
-					<Link href="register/" variant="body2">
-						{"Don't have an account? Register"}
+					<Link href="/login" variant="body2">
+						{"Already have an account? Sign In"}
 					</Link>
 					</Grid>
 				</Grid>
@@ -146,4 +138,4 @@ export default function SignInSide() {
 		</Grid>
 		</ThemeProvider>
 	);
-	}
+}

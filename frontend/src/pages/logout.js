@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import axiosInstance from '../axios';
+import axiosInstance from '../components/axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function Logout() {
-	const history = useNavigate();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const response = axiosInstance.post('logout/blacklist/', {
@@ -11,8 +11,7 @@ export default function Logout() {
 		});
 		localStorage.removeItem('access_token');
 		localStorage.removeItem('refresh_token');
-		axiosInstance.defaults.headers['Authorization'] = null;
-		history.push('/login');
+		navigate('/login');
 	});
 	return <div>Logout</div>;
 }

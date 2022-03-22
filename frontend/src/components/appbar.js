@@ -56,7 +56,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-export default function PrimarySearchAppBar(drawerwidth) {
+export default function PrimarySearchAppBar({drawerwidth}) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -105,19 +105,19 @@ export default function PrimarySearchAppBar(drawerwidth) {
     const mobileMenuId = 'primary-search-account-menu-mobile';
     const renderMobileMenu = (
         <Menu
-        anchorEl={mobileMoreAnchorEl}
-        anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-        }}
-        id={mobileMenuId}
-        keepMounted
-        transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-        }}
-        open={isMobileMenuOpen}
-        onClose={handleMobileMenuClose}
+            anchorEl={mobileMoreAnchorEl}
+            anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            id={mobileMenuId}
+            keepMounted
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            open={isMobileMenuOpen}
+            onClose={handleMobileMenuClose}
         >
         <MenuItem>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
@@ -155,9 +155,7 @@ export default function PrimarySearchAppBar(drawerwidth) {
     );
 
     return (
-        <Box sx={{ flexGrow: 1 }}
-            xs = {{
-                marginLeft: drawerwidth,
+        <Box sx={{ flexGrow: 1,
             }}>
             <AppBar position="static">
                 <Toolbar>

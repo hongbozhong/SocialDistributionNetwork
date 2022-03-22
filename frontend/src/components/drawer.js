@@ -20,38 +20,36 @@ const menuItems = [
     },
 ];
 
-export default function LeftFixedDrawer(drawerwidth) {
+export default function LeftFixedDrawer(props) {
     const navigate = useNavigate();
     const location = useLocation();
 
     return (
-        <>
-            <Drawer
-                variant="permanent"
-                anchor="left"
-                xs = {{
-                    width: {drawerwidth},
-                }}
+        <Drawer
+            variant="permanent"
+            anchor="left"
+            sx = {{
+                width: props.drawerWidth,
+            }}
+            >
+
+
+            <List>
+            {menuItems.map((item) => (
+                <ListItem 
+                    button 
+                    key={item.text} 
+                    onClick={() => navigate(item.path)}
+                    sx = {location.pathname === item.path ? {
+                        background: '#f4f4f4'
+                    } :
+                    null}
                 >
-
-
-                <List>
-                {menuItems.map((item) => (
-                    <ListItem 
-                        button 
-                        key={item.text} 
-                        onClick={() => navigate(item.path)}
-                        xs = {location.pathname === item.path ? {
-                            background: '#f4f4f4'
-                        } :
-                        null}
-                    >
-                    <ListItemIcon>{item.icon}</ListItemIcon>
-                    <ListItemText primary={item.text} />
-                    </ListItem>
-                ))}
-                </List>
-            </Drawer>
-        </>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} />
+                </ListItem>
+            ))}
+            </List>
+        </Drawer>
     )
 }

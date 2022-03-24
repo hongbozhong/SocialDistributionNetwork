@@ -1,9 +1,14 @@
-import React from 'react';
-import axiosInstance from '../components/axios';
-import Post from '../components/post';
+//mertail ui
 import Container from '@mui/material/Container'
 import Masonry from '@mui/lab/Masonry';
+import Typography from '@mui/material/Typography';
 
+//react 
+import React from 'react';
+
+//local
+import axiosInstance from '../components/axiosinstance';
+import Post from '../components/post';
 
 class Home extends React.Component {
 
@@ -23,13 +28,6 @@ class Home extends React.Component {
 		console.log(this.state.posts);
 	}
 
-	componentDidUpdate(){
-		axiosInstance.get('posts').then((res) => {
-			this.setState({posts: res.data});
-		})
-		console.log(this.state.posts);
-	}
-
 	async handleDelete(id) {
 		await axiosInstance.delete('posts');
 		axiosInstance.get('posts').then((res) => {
@@ -37,10 +35,10 @@ class Home extends React.Component {
 		})
 	  }
 	
-
+	
 	render(){
-		return (
-			<Container>
+		if (this.state.posts){
+			return (
 				<Masonry columns={4} spacing={2}>
 					{this.state.posts.map(post => (
 						<div key={post.id}>
@@ -48,8 +46,10 @@ class Home extends React.Component {
 						</div>
 					))}
 				</Masonry>
-			</Container>
-		)
+			)
+		} else {
+			return <Typography color='secondary'>there's no post here already!</Typography>
+		}
 	}
 }
 

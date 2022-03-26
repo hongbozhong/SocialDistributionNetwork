@@ -43,10 +43,13 @@ export default function SignIn() {
 				email: formdata.email,
 				password: formdata.password
 			}).then((res) => {
+				console.log("loginreturn",res);
 				localStorage.setItem('refresh_token', res.data.refresh)
 				localStorage.setItem('access_token', res.data.access)
 				axiosInstance.defaults.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token')
 				navigate('/')
+			}, (error) => {
+				console.log("loginerror",error);
 			})
 		} else {
 			alert('Email or password is empty');
@@ -107,7 +110,7 @@ export default function SignIn() {
 					variant="contained"
 					sx={{ mt: 3, mb: 2 }}
 				>
-					Register
+					Login
 				</Button>
 				<Grid container>
 					<Grid item xs>

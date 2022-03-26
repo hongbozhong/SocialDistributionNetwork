@@ -128,75 +128,78 @@ export default function HomeLayout() {
 
     return (
         <Box sx={{ display: 'flex' }}>
-          <AppBar position="fixed" open={open}>
-              <Toolbar>
-              <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  onClick={handleDrawerOpen}
-                  edge="start"
-                  sx={{
-                  marginRight: 5,
-                  ...(open && { display: 'none' }),
-                  }}
-              >
-                  <MenuIcon color='secondary'/>
-              </IconButton>
-              <Typography variant="h6" noWrap component="div" color='secondary'>
-                  Meteors
-              </Typography>
-              </Toolbar>
-          </AppBar>
-          <Drawer 
-            variant="permanent" 
-            open={open} 
-            sx={{
-              ['& .MuiDrawer-paper']: {bgcolor: '#000000', border: 0},
-            }}
-      >
-              <DrawerHeader>
-              <IconButton onClick={handleDrawerClose}>
-                  {theme.direction === 'rtl' ? <ChevronRightIcon color="secondary"/> : <ChevronLeftIcon color="secondary"/>}
-              </IconButton>
-              </DrawerHeader>
-              <Divider />
-              <List >
-              {menuItems.map((item) => (
-                  <ListItemButton
-                      key={item.text}
-                      sx={{
-                          minHeight: 48,
-                          justifyContent: open ? 'initial' : 'center',
-                          px: 2.5,
-                      }}
-            onClick = {() => navigate(item.path)}
-                  >
-                      <ListItemIcon
-                          sx={{
-                              minWidth: 0,
-                              mr: open ? 3 : 'auto',
-                              justifyContent: 'center',
-                          }}
-                      >
-                          {item.icon}
-                      </ListItemIcon>
-                      <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0, color:'#96FF33' }} />
-                  </ListItemButton>
-              ))}
-              </List>
-          </Drawer>
-          <Box
-            sx={{ 
-              flexGrow: 1, p: 3, height: '100vh',
-              backgroundImage: `url(${BackgroundImage})`,
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          >
-              <DrawerHeader />
-              <Outlet />
-          </Box>
+            <AppBar position="fixed" open={open}>
+                <Toolbar>
+                <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    onClick={handleDrawerOpen}
+                    edge="start"
+                    sx={{
+                    marginRight: 5,
+                    ...(open && { display: 'none' }),
+                    }}
+                >
+                    <MenuIcon color='secondary'/>
+                </IconButton>
+                <Typography variant="h6" noWrap component="div" color='secondary'>
+                    Meteors
+                </Typography>
+                </Toolbar>
+            </AppBar>
+            <Drawer 
+                variant="permanent" 
+                open={open} 
+                sx={{
+                ['& .MuiDrawer-paper']: {bgcolor: '#000000', border: 0},
+                }}
+            >
+                <DrawerHeader>
+                    <IconButton onClick={handleDrawerClose}>
+                        {theme.direction === 'rtl' ? <ChevronRightIcon color="secondary"/> : <ChevronLeftIcon color="secondary"/>}
+                    </IconButton>
+                </DrawerHeader>
+
+                <Divider />
+
+                <List >
+                {menuItems.map((item) => (
+                    <ListItemButton
+                        key={item.text}
+                        sx={{
+                            minHeight: 48,
+                            justifyContent: open ? 'initial' : 'center',
+                            px: 2.5,
+                        }}
+                onClick = {() => navigate(item.path)}
+                    >
+                        <ListItemIcon
+                            sx={{
+                                minWidth: 0,
+                                mr: open ? 3 : 'auto',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            {item.icon}
+                        </ListItemIcon>
+                        <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0, color:'#96FF33' }} />
+                    </ListItemButton>
+                ))}
+                </List>
+            </Drawer>
+            
+            <Box
+                sx={{ 
+                    flexGrow: 1, p: 3, height: '100vh',
+                    backgroundImage: `url(${BackgroundImage})`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                }}
+            >
+                <DrawerHeader />
+                <Outlet />
+            </Box>
         </Box>
     );
     }

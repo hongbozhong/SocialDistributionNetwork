@@ -24,9 +24,10 @@ class Home extends React.Component {
 	componentDidMount(){
 		axiosInstance.get('posts').then((res) => {
 			this.setState({posts: res.data});
+			console.log(this.state.posts);
 		})
-		console.log(this.state.posts);
 	}
+
 
 	async handleDelete(id) {
 		await axiosInstance.delete('posts');

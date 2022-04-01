@@ -7,8 +7,10 @@ import Typography from '@mui/material/Typography';
 import React from 'react';
 
 //local
-import axiosInstance from '../components/axiosinstance';
+import axiosInstance from '../axiosinstance';
 import Post from '../components/post';
+
+
 
 class Home extends React.Component {
 
@@ -22,7 +24,7 @@ class Home extends React.Component {
 	}
 
 	componentDidMount(){
-		axiosInstance.get('posts').then((res) => {
+		axiosInstance.get('/posts/').then((res) => {
 			this.setState({posts: res.data});
 			console.log(this.state.posts);
 		})
@@ -30,8 +32,8 @@ class Home extends React.Component {
 
 
 	async handleDelete(id) {
-		await axiosInstance.delete('posts');
-		axiosInstance.get('posts').then((res) => {
+		await axiosInstance.delete('/posts/');
+		axiosInstance.get('/posts/').then((res) => {
 			this.setState({posts: res.data});
 		})
 	  }

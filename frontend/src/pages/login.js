@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 //local
-import axiosInstance from '../components/axiosinstance';
+import axiosInstance from '../axiosinstance';
 import CssTextField from "../components/csstextfield";
 import Copyright from "../components/copyright";
 
@@ -39,17 +39,17 @@ export default function SignIn() {
 		console.log(formdata);
 
 		if (formdata.email && formdata.password){
-			axiosInstance.post('api/token/', {
+			axiosInstance.post('/api/token/', {
 				email: formdata.email,
 				password: formdata.password
 			}).then((res) => {
 				console.log("loginreturn",res);
-				localStorage.setItem('refresh_token', res.data.refresh)
-				localStorage.setItem('access_token', res.data.access)
-				axiosInstance.defaults.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token')
-				navigate('/')
-			}, (error) => {
-				console.log("loginerror",error);
+				localStorage.setItem('refresh_token', res.data.refresh);
+				localStorage.setItem('access_token', res.data.access);
+				axiosInstance.defaults.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token');
+				navigate('/');
+			}).catch((error) => {
+				console.log("login error",error);
 			})
 		} else {
 			alert('Email or password is empty');
@@ -120,7 +120,7 @@ export default function SignIn() {
 					</Grid>
 					<Grid item>
 					<Link to="/join/register" style={{color:'#3498DB'}}>      {/*light blue #3498DB*/}      
-						{"Already have an account? Login"}
+						{"Do not have an account? Register"}
 					</Link>
 					</Grid>
 				</Grid>

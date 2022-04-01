@@ -29,6 +29,10 @@ class UserManager(BaseUserManager):
         return self.create_user(*args, **kargs)
 
 class User(AbstractBaseUser):
+
+    class __Meta__:
+        indexes = [models.Index(fields=['id'])]
+
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     username = models.CharField(max_length=30, unique=True, default="")
     email = models.CharField(max_length=30, unique=True)

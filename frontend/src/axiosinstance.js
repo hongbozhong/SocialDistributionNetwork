@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'http://127.0.0.1:8000/';
-
-axios.defaults["Content-Type"] = 'application/json'
+const baseURL = 'http://127.0.0.1:8000';
 
 const axiosInstance = axios.create({
 	baseURL: baseURL,
@@ -16,6 +14,19 @@ const axiosInstance = axios.create({
 	}, 
 });
 
+/*
+axiosInstance.interceptors.request.use(
+	(request) => {
+		request.headers.Authorization = localStorage.getItem('access_token')
+										? 'JWT ' + localStorage.getItem('access_token')
+										: null;
+	},
+	(error) => {
+		Promise.reject(error);
+	}
+)
+*/
+
 axiosInstance.interceptors.response.use(
 	(response) => {
 		return response;
@@ -25,23 +36,24 @@ axiosInstance.interceptors.response.use(
 		const response = error.response;
 		console.log("axiosInstance error response", response);
 		console.log("axiosInstance error requestconfig", requsetConfig);
-		if (!error.request) {
+		if (!error.request) {                                                                   //request config error
 			console.log('no request is even generated,  error in request setup');
-		} else if (!response) {
+		} else if (!response) {                                                          //np reponse received
 			alert(
 				'No response from the server' +
 				'Probably a server/network error occurred. ' 
 			)
 			return Promise.reject(error);
 		} else {
+			//handle error when the response status is 401                                                       
 			if (response.status === 401 && response.statusText === 'Unauthorized'){
 				const refreshToken = localStorage.getItem('refresh_token');
 
-				if (requsetConfig.url === 'api/token/'){   // request from login page failed
+				if (requsetConfig.url === '/api/token/'){     // request from login page failed
 					alert('Email or password is not correct');
 					return Promise.reject(error)
-				} else {                              // try to use refreshtoken to get new access token
-					if (!refreshToken){   // refresh token is not available
+				} else {                                // try to use refreshtoken to get new access token
+					if (!refreshToken){           // refresh token is not available or expired
 						window.location.href = '/join/login';
 						return Promise.reject(error);
 					} else {      
@@ -54,7 +66,7 @@ axiosInstance.interceptors.response.use(
 							console.log('Refresh token is expired', tokenParts.exp, now);
 							window.location.href = '/join/login';
 						} else {       
-							return axiosInstance.post('/token/refresh/', { refresh: refreshToken })
+							return axiosInstance.post('/api/token/refresh/', { refresh: refreshToken })
 								.then((response) => {
 									localStorage.setItem('access_token', response.data.access);
 									localStorage.setItem('refresh_token', response.data.refresh);
@@ -74,6 +86,7 @@ axiosInstance.interceptors.response.use(
 				}
 			}
 
+			//when the response status code is not 401
 			console.log('request for the error that is not handled', error.config)
 			return Promise.reject(error);
 		}

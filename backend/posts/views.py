@@ -3,11 +3,11 @@ from urllib import response
 from django.shortcuts import render
 
 # Create your views here.
+from rest_framework import generics
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import permissions, authentication
-from rest_framework.viewsets import ModelViewSet
+from rest_framework import permissions
 from .models import Post, Comment, User
 from .serializers import PostSerializer, CommentSerializer, UserSerializer
 from .permissions import IsOwnerOrReadOnly, IsSelf
@@ -18,8 +18,7 @@ from rest_framework import status
 
 
 class PostView(APIView):
-    authentication_classes = []
-    permission_classes = []
+    permission_classes = [permissions.IsAuthenticated]
     model = Post
     serializer = PostSerializer
 
@@ -44,7 +43,6 @@ class PostView(APIView):
     
 
 class CommentView(APIView):
-    authentication_classes = []
     permission_classes = []
     model = Comment
     serializer = CommentSerializer
@@ -68,15 +66,11 @@ class CommentView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST) 
 
 class UserView(APIView):
-    authentication_classes = []
     permission_classes = []
     model = User
     serializer = UserSerializer
 
     def get(self, request):
-        print(request.user)
-        print(request.auth)
-        print(request.headers)
         queryset = self.model.objects.all()
         Q_initial = Q()
         for key, val in request.query_params.items():
@@ -89,7 +83,7 @@ class UserView(APIView):
     
     def post(self, request):
         try:
-            data = {key:request.data[key] for key in request.data}
+            data = {key:val for key, val in request.data.items()}
             user = self.model.objects.create(**data)
             serial_res = self.serializer(user)
             return Response(serial_res.data)
@@ -103,7 +97,6 @@ class UserView(APIView):
 
 class BlacklistTokenUpdateView(APIView):
     permission_classes = []
-    authentication_classes = ()
 
     def post(self, request):
         try:
@@ -113,6 +106,5 @@ class BlacklistTokenUpdateView(APIView):
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
 
 

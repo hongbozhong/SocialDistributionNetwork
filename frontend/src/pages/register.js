@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 //local
-import axiosInstance from '../components/axiosinstance';
+import axiosInstance from '../axiosinstance';
 import CssTextField from "../components/csstextfield";
 import Copyright from "../components/copyright";
 
@@ -38,15 +38,17 @@ export default function Register() {
 		e.preventDefault();
 		console.log(formdata);
 
-		if (formdata.email && formdata.password && formdata.password===formdata.confirmpassword){
-			axiosInstance.post('api/token/', {
+		if (formdata.email && formdata.password && formdata.password===formdata.confirmPassword){
+			axiosInstance.post('/users/', {
 				email: formdata.email,
 				password: formdata.password
 			}).then((res) => {
-				localStorage.setItem('refresh_token', res.data.refresh)
-				localStorage.setItem('access_token', res.data.access)
-				axiosInstance.defaults.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token')
-				navigate('/')
+				localStorage.setItem('refresh_token', res.data.refresh);
+				localStorage.setItem('access_token', res.data.access);
+				axiosInstance.defaults.headers['Authorization'] = 'Bearer '+localStorage.getItem('access_token');
+				navigate('/');
+			}).catch((error) => {
+				console.log("register error",error);
 			})
 		} else {
 			alert('Email or password is empty');
@@ -105,7 +107,7 @@ export default function Register() {
 					fullWidth
 					name="confirmPassword"
 					label="confirmPassword"
-					type="confirmPassword"
+					type="password"
 					id="confirmPassword"
 					onChange={handleChange}
 					size="small"

@@ -3,8 +3,6 @@ from urllib import response
 from django.shortcuts import render
 
 # Create your views here.
-from rest_framework import generics
-from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions
@@ -24,13 +22,25 @@ class PostView(APIView):
 
     def get(self, request):
         queryset = self.model.objects.all()
-        Q_initial = Q()
-        for key, val in request.query_params.items():
-            d = {key+"__iexact": val}
-            Q_initial &= Q(**d)
-        queryset = queryset.filter(Q_initial)
+        if not request.query_params:
+            Q_initial = Q()
+            for key, val in request.query_params.items():
+                d = {key+"__iexact": val}
+                Q_initial &= Q(**d)
+            queryset = queryset.filter(Q_initial)
 
+        #change foreign key author to its name and prettify the date format
         serial_res = self.serializer(queryset, many = True)
+        for i in range(len(serial_res.data)):
+            postdata = serial_res.data[i]
+            author = User.objects.get(id = str(postdata['author']))
+            postdata['author'] = author.username
+
+            datetime = postdata['created_at'][:-1]
+            date, t = datetime.split('T')
+            hour, minute, second = t.split(':')
+            postdata['created_at'] = f'{date} {hour}:{minute}'
+
         return Response(serial_res.data)   
 
     def post(self, request):

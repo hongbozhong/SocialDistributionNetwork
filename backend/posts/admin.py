@@ -35,6 +35,15 @@ class CustomUserAdmin(UserAdmin):
 
     filter_horizontal = ()
     ordering = ('created_at', )
+    actions = ['make_active', 'make_inactive']
+
+    @admin.action(description='make users active')
+    def make_active(self, request, queryset):
+        queryset.update(is_active=True)
+    
+    @admin.action(description='make users inactive')
+    def make_inactive(self, request, queryset):
+        queryset.update(is_active=False)
 
 admin.site.register(Post, PostAdmin)
 admin.site.register(User, CustomUserAdmin)

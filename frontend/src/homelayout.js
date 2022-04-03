@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 
 //local
 import BackgroundImage from './images/background.jpg';
+import AccountMenu from './components/accountmenu';
 
 
 const drawerWidth = 240;
@@ -36,6 +37,8 @@ const openedMixin = (theme) => ({
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: 'hidden',
+  backgroundColor: '#000000', 
+  border: 0,
 });
 
 const closedMixin = (theme) => ({
@@ -48,6 +51,8 @@ const closedMixin = (theme) => ({
   [theme.breakpoints.up('sm')]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
+  backgroundColor: '#000000', 
+  border: 0,
 });
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -59,52 +64,52 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
+const AppBar = styled(MuiAppBar, {shouldForwardProp: (prop) => prop !== 'open'})(
+    ({ theme, open }) => ({
+        zIndex: theme.zIndex.drawer + 1,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        ...(open && {
+            marginLeft: drawerWidth,
+            width: `calc(100% - ${drawerWidth}px)`,
+            transition: theme.transitions.create(['width', 'margin'], {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.enteringScreen,
+            }),
+        }),
+    })
+);
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme),
-    }),
-  }),
+const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open'})(
+    ({ theme, open }) => ({
+        width: drawerWidth,
+        flexShrink: 0,
+        whiteSpace: 'nowrap',
+        boxSizing: 'border-box',
+        ...(open && {
+            ...openedMixin(theme),
+            '& .MuiDrawer-paper': openedMixin(theme),
+        }),
+        ...(!open && {
+            ...closedMixin(theme),
+            '& .MuiDrawer-paper': closedMixin(theme),
+        }),
+    })
 );
 
 
 const menuItems = [
     { 
-      text: 'Home', 
-      icon: <HomeOutlinedIcon color="secondary" />, 
-      path: '/' 
+        text: 'Home', 
+        icon: <HomeOutlinedIcon color="secondary" />, 
+        path: '/' 
     },
     { 
-      text: 'New Post', 
-      icon: <AddCircleOutlineOutlinedIcon color="secondary" />, 
-      path: '/create' 
+        text: 'New Post', 
+        icon: <AddCircleOutlineOutlinedIcon color="secondary" />, 
+        path: '/create' 
     },
     { 
         text: 'Inbox', 
@@ -130,29 +135,28 @@ export default function HomeLayout() {
         <Box sx={{ display: 'flex' }}>
             <AppBar position="fixed" open={open}>
                 <Toolbar>
-                <IconButton
-                    color="inherit"
-                    aria-label="open drawer"
-                    onClick={handleDrawerOpen}
-                    edge="start"
-                    sx={{
-                    marginRight: 5,
-                    ...(open && { display: 'none' }),
-                    }}
-                >
-                    <MenuIcon color='secondary'/>
-                </IconButton>
-                <Typography variant="h6" noWrap component="div" color='secondary'>
-                    Meteors
-                </Typography>
+                    <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={handleDrawerOpen}
+                        edge="start"
+                        sx={{
+                            marginRight: 5,
+                            ...(open && { display: 'none' }),
+                        }}
+                    >
+                        <MenuIcon color='secondary'/>
+                    </IconButton>
+                    <Typography variant="h6" noWrap component="div" color='secondary' sx ={{flexGrow: 1}}>
+                        Meteors
+                    </Typography>
+                    <AccountMenu />
                 </Toolbar>
             </AppBar>
             <Drawer 
                 variant="permanent" 
                 open={open} 
-                sx={{
-                ['& .MuiDrawer-paper']: {bgcolor: '#000000', border: 0},
-                }}
+                /*sx ={{'& .MuiDrawer-paper': {bgcolor: '#000000', border: 0}}}*/
             >
                 <DrawerHeader>
                     <IconButton onClick={handleDrawerClose}>
@@ -171,7 +175,7 @@ export default function HomeLayout() {
                             justifyContent: open ? 'initial' : 'center',
                             px: 2.5,
                         }}
-                onClick = {() => navigate(item.path)}
+                        onClick = {() => navigate(item.path)}
                     >
                         <ListItemIcon
                             sx={{

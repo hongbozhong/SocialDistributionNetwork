@@ -179,7 +179,10 @@ class CreatePost extends React.Component{
     render() {
         return (
             <Box component="form" noValidate onSubmit={this.handleSubmit} sx={{display: 'flex', flexDirection: 'column', }}>
-                <Tooltip title="Type here. You can insert images too" arrow placement='right'>
+                <Tooltip title={<p style={{fontSize:15 }}>Type here. You can insert images too</p>} 
+                        arrow 
+                        placement='right' 
+                    >
                     <TextArea id='textarea'>
                         <Typography 
                             id='editable_div'

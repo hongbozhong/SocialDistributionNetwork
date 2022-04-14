@@ -12,13 +12,11 @@ import Logout from '@mui/icons-material/Logout';
 // react, react-router-dom
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-// local
-import axiosInstance from '../axiosinstance';
 
-export default function AccountMenu() {
+
+export default function AccountMenu({handleLogout}) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
-    const navigate = useNavigate();
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -26,20 +24,10 @@ export default function AccountMenu() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const handleLogout = () => {
-        axiosInstance.post('/logout/blacklist/', {
-            refresh_token: localStorage.getItem('refresh_token'),
-        }).catch((error) => {
-            console.log("logout error", error);
-        })
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        navigate('/login');
-    }
 
     return (
         <>
-            <Tooltip title="Account settings" sx={{'& .MuiTooltip-popper': {backgroundColor:'green'}}}>
+            <Tooltip title="Account settings" >
                 <IconButton
                     onClick={handleClick}
                     size="small"

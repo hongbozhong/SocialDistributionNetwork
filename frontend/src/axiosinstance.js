@@ -1,4 +1,5 @@
 import axios from 'axios';
+import DecodeJwt from './components/decodejwt';
 
 const baseURL = 'http://127.0.0.1:8000';
 
@@ -57,11 +58,9 @@ axiosInstance.interceptors.response.use(
 						window.location.href = '/join/login';
 						return Promise.reject(error);
 					} else {      
-						const tokenParts = JSON.parse(atob(refreshToken.split('.')[1]));
+						const tokenParts = DecodeJwt(refreshToken);
 
 						const now = Math.ceil(Date.now() / 1000);
-						console.log('axiosinstance exp', tokenParts.exp);
-						
 						if (tokenParts.exp < now) {   // refrshtoken expired
 							console.log('Refresh token is expired', tokenParts.exp, now);
 							window.location.href = '/join/login';

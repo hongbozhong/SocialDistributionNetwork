@@ -13,12 +13,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import JoinLayout from './joinlayout';
 import Login from './pages/login'
-import Logout from './pages/logout'
 import Register from './pages/register'
 import Home from './pages/home'
 import HomeLayout from './homelayout'
 import CreatePost from './pages/createpost';
 import Inbox from './pages/inbox'
+import RedirectToLogin from './components/redirecttologin'
 
 
 const theme = createTheme({
@@ -38,6 +38,7 @@ const theme = createTheme({
 });
 
 
+
 const App = () => {
 	return (
 		<ThemeProvider theme={theme}>
@@ -45,23 +46,21 @@ const App = () => {
 			<BrowserRouter>
 				<Routes>
 					<Route path="/" element={<HomeLayout />} >		
-						<Route path="/" element={<Home />} />
+						<Route index element={<Home />} />
 						<Route path="create" element={<CreatePost />} />
 						<Route path="inbox" element={<Inbox />} />
 					</Route>
 					<Route path='/join' element={<JoinLayout />}>
+						<Route index element={<RedirectToLogin />}/>
 						<Route path="register" element={<Register />} />
 						<Route path="login" element={<Login />} />
-						<Route path="logout" element={<Logout />} />
 					</Route>
-					<Route
-						path="*"
-						element={
-							<main style={{ padding: '1rem' }}>
-								<p>There's nothing here!</p>
-							</main>
-						}
-        			/>
+					<Route path="*" element={
+						<>
+							<h1>404 Not found</h1>
+							<p>There is no matched url in this server</p>
+						</>
+					}/>
 				</Routes>
 			</BrowserRouter>
 		</ThemeProvider>

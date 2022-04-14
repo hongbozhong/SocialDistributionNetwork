@@ -21,36 +21,52 @@ class Home extends React.Component {
 		};
 
 		this.handleDelete = this.handleDelete.bind(this);
+		this.handleLikeChange = this.handleLikeChange.bind(this);
 	}
 
 	componentDidMount(){
-		axiosInstance.get('/posts/').then((res) => {
+		axiosInstance.get('/posts/', {params: {'public':true}}).then((res) => {
 			this.setState({posts: res.data});
+			console.log(this.state);
 		})
 	}
 
-
-	async handleDelete(id) {
-		await axiosInstance.delete('/posts/');
-		axiosInstance.get('/posts/').then((res) => {
+	handleDelete(i) {
+		axiosInstance.delete('/posts/', {data:{'id':this.state.posts[i].id}})
+		.then((res) => {
+			return axiosInstance.get('/posts/', {params: {'public':true}});
+		}).then((res) => {
 			this.setState({posts: res.data});
+		}).catch((error) => {
+			console.log('post delete: ', error);
 		})
-	  }
+
+	}
+
+	handleLikeChange(i) {
+		axiosInstance.post('/likes/', {'postid': this.state.posts[i].id});
+		this.setState((prevState) => {
+			const newState = JSON.parse(JSON.stringify(prevState));
+			newState.posts[i].like = !prevState.posts[i].like
+			newState.posts[i].like_count = prevState.posts[i].like_count + (prevState.posts[i].like ? -1:1)
+			return newState
+		})
+	}
 	
 	
 	render(){
 		if (this.state.posts){
 			return (
-				<Masonry columns={4} spacing={2}>
-					{this.state.posts.map(post => (
+				<Masonry columns={{ xs: 1, sm: 3, lg:5 }} spacing={4} >
+					{this.state.posts.map((post, i) => (
 						<div key={post.id}>
-							<Post post={post} handleDelete={this.handleDelete} />
+							<Post post={post} handleDelete={() => this.handleDelete(i)} handleLikeChange={() => this.handleLikeChange(i)} />
 						</div>
 					))}
 				</Masonry>
-			)
+			);
 		} else {
-			return <Typography color='secondary'>there's no post here already!</Typography>
+			return (<Typography color='secondary'>there's no post here already!</Typography>);
 		}
 	}
 }

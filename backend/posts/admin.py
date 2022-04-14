@@ -2,18 +2,28 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Post, Comment, User
+from .models import Post, Comment, User, Like, PostImage
 from django.contrib.auth.admin import UserAdmin
 
-
+class LikeInline(admin.TabularInline):
+    model = Like
+    extra = 1
 
 class CommentInline(admin.TabularInline):
     model = Comment
+    extra = 1
+
+class PostImageInline(admin.TabularInline):
+    model = PostImage
+    extra = 1
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('content', 'author', 'created_at')
+    ordering = ('created_at', )
     inlines = [
         CommentInline,
+        LikeInline,
+        PostImageInline,
     ]
 
 class CustomUserAdmin(UserAdmin):

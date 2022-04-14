@@ -85,7 +85,6 @@ export default function SignIn() {
 					autoComplete="email"
 					autoFocus
 					onChange={handleChange}
-					sx = {{input: { color: 'white' }}}
 					
 				/>
 				<CssTextField
@@ -98,7 +97,6 @@ export default function SignIn() {
 					id="password"
 					autoComplete="current-password"
 					onChange={handleChange}
-					sx = {{input: { color: 'white' }}}
 				/>
 				<FormControlLabel 
 					control={<Checkbox value="remember" sx={{color:'white'}} />}

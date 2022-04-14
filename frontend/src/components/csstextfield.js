@@ -12,6 +12,7 @@ const CssTextField = styled(TextField)({
 	'& .MuiOutlinedInput-root': {
 		'&.Mui-focused fieldset': {
 		  	borderColor: '#3CFF33',          // light green
+			boxShadow: '0 0 10px #3CFF33',
 		},
 		'&:hover fieldset': {
 			borderColor: '#3CFF33',
@@ -19,6 +20,9 @@ const CssTextField = styled(TextField)({
 		'& fieldset': {
 			borderColor: '#0E7D3C',         // dark green
 		},
+	},
+	'& .MuiOutlinedInput-input': {
+		color: 'white',
 	}
 });
 

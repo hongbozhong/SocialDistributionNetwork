@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 //local
 import BackgroundImage from './images/background.jpg';
 import AccountMenu from './components/accountmenu';
+import axiosInstance from './axiosinstance';
 
 
 const drawerWidth = 240;
@@ -37,7 +38,7 @@ const openedMixin = (theme) => ({
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: 'hidden',
-  backgroundColor: '#000000', 
+  backgroundColor: '#000000',
   border: 0,
 });
 
@@ -119,20 +120,32 @@ const menuItems = [
 ];
 
 export default function HomeLayout() {
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const navigate = useNavigate()
+    const theme = useTheme();
+    const [open, setOpen] = React.useState(false);
+    const navigate = useNavigate()
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+    const handleDrawerOpen = () => {
+        setOpen(true);
+    };
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+    const handleDrawerClose = () => {
+        setOpen(false);
+    };
+
+    const handleLogout = () => {
+        axiosInstance.post('/logout/blacklist/', {
+            refresh_token: localStorage.getItem('refresh_token'),
+        }).catch((error) => {
+            console.log("logout error", error);
+        })
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        navigate('/join/login');
+    }
+
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex'}}>
             <AppBar position="fixed" open={open}>
                 <Toolbar>
                     <IconButton
@@ -150,13 +163,14 @@ export default function HomeLayout() {
                     <Typography variant="h6" noWrap component="div" color='secondary' sx ={{flexGrow: 1}}>
                         Meteors
                     </Typography>
-                    <AccountMenu />
+                    <AccountMenu handleLogout={handleLogout}/>
                 </Toolbar>
             </AppBar>
             <Drawer 
                 variant="permanent" 
                 open={open} 
                 /*sx ={{'& .MuiDrawer-paper': {bgcolor: '#000000', border: 0}}}*/
+                position='fixed'
             >
                 <DrawerHeader>
                     <IconButton onClick={handleDrawerClose}>
@@ -194,11 +208,14 @@ export default function HomeLayout() {
             
             <Box
                 sx={{ 
-                    flexGrow: 1, p: 3, height: '100vh',
+                    flexGrow: 1, 
+                    p: 3, 
+                    height: '100vh',
                     backgroundImage: `url(${BackgroundImage})`,
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
+                    overflow: 'auto',
                 }}
             >
                 <DrawerHeader />

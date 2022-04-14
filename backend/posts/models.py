@@ -63,6 +63,10 @@ class User(AbstractBaseUser):
 
 
 class Post(models.Model):
+
+    class __Meta__:
+        indexes = [models.Index(fields=['id'])]
+
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     content = models.CharField(max_length=256, null=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
@@ -70,6 +74,10 @@ class Post(models.Model):
 
     def __str__(self):
         return self.content
+
+class PostImage(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to="images/%Y/%m/%d/")
 
 
 
@@ -82,3 +90,12 @@ class Comment(models.Model):
     def __str__(self):
         return self.content
 
+
+
+class Like(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    on = models.BooleanField(default=False)
+
+    def __str__(self):
+        return 'True' if self.on else 'False'

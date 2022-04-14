@@ -1,17 +1,12 @@
 import React from 'react'
 
 import Typography from '@mui/material/Typography';
-import CssTextField from '../components/csstextfield'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import axiosInstance from '../axiosinstance';
-import FormControl from '@mui/material/FormControl';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel'
-import { fontSize } from '@mui/system';
 import Tooltip from '@mui/material/Tooltip';
-
 import { styled } from '@mui/system';
+
 import $ from 'jquery'
 
 const TextArea = styled('div')({
@@ -32,8 +27,9 @@ const TextArea = styled('div')({
 
 function ImageList({images}) {
     const htmlimages = [];
+    console.log(images);
     for (var i=0; i<Math.min(images.length, 9); i++){
-        htmlimages.push(<img src={URL.createObjectURL(images[i])} key={images[i].name} style={{margin: 10, width: 100}}/>);
+        htmlimages.push(<img src={URL.createObjectURL(images[i])} key={images[i].name+i.toString()} style={{margin: 10, width: 100, height: 75}}/>);
     }
     return htmlimages;
 }
@@ -59,8 +55,12 @@ class CreatePost extends React.Component{
 
     handleFileChange = (e) => {
         console.log(e.target.files);
+        const files = [];
+        for (var i=0; i<Math.max(0, Math.min(e.target.files.length, 9-this.state.images.length)); i++){
+            files.push(e.target.files[i]);
+        }
         this.setState({
-            images: this.state.images.concat([...e.target.files])
+            images: this.state.images.concat([...files])
         });
     }
 
@@ -124,12 +124,12 @@ class CreatePost extends React.Component{
             (e) => { check_charcount(textinputid, limit, e); })
         );
 
-        //set height of TextArea
+        //set height of TextArea and image
         var fontsize = $('#'+textinputid).css('font-size');
         var lineheight = Math.floor(parseInt(fontsize.replace('px','')) * 1.5);
         var paddingtop = parseInt($('#'+textinputid).css('padding-top').replace('px',''));
+        console.log('lineheight', lineheight);
         $('#'+textinputid).css({'height':lineheight*20+paddingtop*2})
-        $('img').css({'height':lineheight*2})
 
         //add css to textarea when its children textinput is focused
         $('#'+textinputid)
@@ -154,9 +154,13 @@ class CreatePost extends React.Component{
                 if (fileList[0].type.indexOf("image") === -1) {
                     return;
                 }
-
+                
+                const files = []
+                for (var i=0; i<Math.max(0, Math.min(fileList.length, 9-this.state.images.length)); i++){
+                    files.push(fileList[i]);
+                }
                 this.setState({
-                    images: this.state.images.concat([...fileList])
+                    images: this.state.images.concat([...files])
                 })
                 /*
                 var reader = new FileReader();
@@ -183,7 +187,7 @@ class CreatePost extends React.Component{
     render() {
         return (
             <Box component="form" noValidate onSubmit={this.handleSubmit} sx={{display: 'flex', flexDirection: 'column', }}>
-                <Tooltip title={<p style={{fontSize:15 }}>Type here. You can insert images too</p>} 
+                <Tooltip title={<p style={{fontSize:15 }}>Type here. You can drag images here too</p>} 
                         arrow 
                         placement='right' 
                     >

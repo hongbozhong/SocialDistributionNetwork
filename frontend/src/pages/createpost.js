@@ -132,9 +132,13 @@ class CreatePost extends React.Component{
         $('img').css({'height':lineheight*2})
 
         //add css to textarea when its children textinput is focused
-        $('#'+textinputid).on('focus', ()=>{
-            $('#'+inputareaid).css({borderWidth: '2px', boxShadow: '0 0 10px #3CFF33'})
-        })
+        $('#'+textinputid)
+            .on('focus', ()=>{
+                $('#'+inputareaid).css({borderWidth: '2px', boxShadow: '0 0 10px #3CFF33'});
+            })
+            .on('blur', ()=>{
+                $('#'+inputareaid).css({borderWidth: '1px', boxShadow: ''});
+            })
 
         //drag and drop image
         $('#'+inputareaid)

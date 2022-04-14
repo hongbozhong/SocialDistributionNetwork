@@ -23,12 +23,10 @@ const TextArea = styled('div')({
     '&:hover': {
         borderColor: '#3CFF33',
     },
-    '&:focus':{
-        borderColor: '#3CFF33',
-        borderCWidth: '2px',
-        outline: 'none !important',
-        boxShadow: '0 0 10px #3CFF33',
-    },
+    //'& #editable_div:focus':{
+    //    borderCWidth: '2px',
+    //    boxShadow: '0 0 10px #3CFF33',
+    //},
     overflow: 'auto',
 })
 
@@ -48,7 +46,7 @@ class CreatePost extends React.Component{
         this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
             content: "",
-            images: null
+            images: []
         }
     }
 
@@ -60,8 +58,9 @@ class CreatePost extends React.Component{
     }
 
     handleFileChange = (e) => {
+        console.log(e.target.files);
         this.setState({
-            [e.target.name]: e.target.files
+            images: this.state.images.concat([...e.target.files])
         });
     }
 
@@ -96,11 +95,12 @@ class CreatePost extends React.Component{
     }
 
     componentDidMount(){
-        const content_id = 'editable_div';  
+        const textinputid = 'editable_div';  
+        const inputareaid = 'textarea';
         const limit = 256;
 
         //limit the number of characters in TextArea 
-        function check_charcount(content_id, limit, e) {
+        function check_charcount(textinputid, limit, e) {
             const allowedKeys = (
                 e.key === "Backspace" ||  
                 e.key === 'End' || 
@@ -116,70 +116,62 @@ class CreatePost extends React.Component{
                 e.ctrlKey === true && e.key === 'v' || 
                 e.ctrlKey === true && e.key === 'z'   
             )
-            if(!allowedKeys && $('#'+content_id).text().length > limit){
+            if(!allowedKeys && $('#'+textinputid).text().length > limit){
                 e.preventDefault();
             }
         }
-        $('#'+content_id).keydown(function(e){ check_charcount(content_id, limit, e); });
+        $('#'+textinputid).on('keydown', (
+            (e) => { check_charcount(textinputid, limit, e); })
+        );
 
         //set height of TextArea
-        var fontsize = $('#'+content_id).css('font-size');
+        var fontsize = $('#'+textinputid).css('font-size');
         var lineheight = Math.floor(parseInt(fontsize.replace('px','')) * 1.5);
-        var paddingtop = parseInt($('#'+content_id).css('padding-top').replace('px',''));
-        $('#'+content_id).css({'height':lineheight*20+paddingtop*2})
+        var paddingtop = parseInt($('#'+textinputid).css('padding-top').replace('px',''));
+        $('#'+textinputid).css({'height':lineheight*20+paddingtop*2})
         $('img').css({'height':lineheight*2})
 
-        //drag and drop
-        var inputarea = document.getElementById('textarea');
+        //add css to textarea when its children textinput is focused
+        $('#'+textinputid).on('focus', ()=>{
+            $('#'+inputareaid).css({borderWidth: '2px', boxShadow: '0 0 10px #3CFF33'})
+        })
 
-        inputarea.addEventListener(
-            "dragenter",
-            function(e) {
-                e.preventDefault();
-            },
-            false
+        //drag and drop image
+        $('#'+inputareaid)
+        .on('dragover', false)
+        .on('drop', 
+            (e => {
+                e.preventDefault(); 
+                const origin_e = e.originalEvent;
+                var fileList = origin_e.dataTransfer.files;
+                if (fileList.length == 0) {
+                    return;
+                }
+                if (fileList[0].type.indexOf("image") === -1) {
+                    return;
+                }
+
+                this.setState({
+                    images: this.state.images.concat([...fileList])
+                })
+                /*
+                var reader = new FileReader();
+                reader.onload = function(origin_e) {
+                    
+                    $('#image_box').append($(document.createElement('img'))
+                                            .css({'margin':'10px', 'width':'100px'})
+                                            .attr('src', this.result)
+                                            )
+                    
+                   
+                };
+                reader.readAsDataURL(fileList[0]);
+                */
+                return false;
+                }
+            )
         );
 
-        inputarea.addEventListener(
-            "dragover",
-            function(e) {
-                e.preventDefault();
-            },
-            false
-        );
-
-        inputarea.addEventListener(
-            "drop",
-            function(e) {
-                dropHandler(e);
-            },
-            false
-        );
-        
-        const imagebox = document.getElementById('image_box')
-        var dropHandler = function(e) {
-            e.preventDefault(); 
-            console.log('hhhhh');
-            var fileList = e.dataTransfer.files;
-            if (fileList.length == 0) {
-              return;
-            }
-            console.log(fileList);
-            if (fileList[0].type.indexOf("image") === -1) {
-              return;
-            }
-            var reader = new FileReader();
-            var img = document.createElement("img");
-            img.style.margin = '10px';
-            img.style.width = '100px';
-          
-            reader.onload = function(e) {
-              img.src = this.result;
-              inputarea.appendChild(img);
-            };
-            reader.readAsDataURL(fileList[0]);
-          };
-          
 
 
     }
@@ -195,7 +187,7 @@ class CreatePost extends React.Component{
                             variant='body2' 
                             contentEditable="true" 
                             suppressContentEditableWarning={true} 
-                            sx={{borderWidth:0, outline:0}}
+                            sx={{borderWidth:0, outline:0 }}
                             onKeyUp={this.handleTextChange}
                         />
                         <Box id='image_box' sx={{display:'flex', width:'100%', flexWrap: 'wrap'}}>

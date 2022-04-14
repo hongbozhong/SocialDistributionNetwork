@@ -17,6 +17,7 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import Tooltip from '@mui/material/Tooltip';
 
 //react and react-router-dom
 import React from 'react';
@@ -190,17 +191,19 @@ export default function HomeLayout() {
                             px: 2.5,
                         }}
                         onClick = {() => navigate(item.path)}
-                    >
-                        <ListItemIcon
-                            sx={{
-                                minWidth: 0,
-                                mr: open ? 3 : 'auto',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            {item.icon}
-                        </ListItemIcon>
-                        <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0, color:'#96FF33' }} />
+                    >   
+                        <Tooltip title={item.text} arrow placement='right'>
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                {item.icon}
+                            </ListItemIcon>
+                        </Tooltip>
+                        <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0, color:'#96FF33' }} />                  
                     </ListItemButton>
                 ))}
                 </List>

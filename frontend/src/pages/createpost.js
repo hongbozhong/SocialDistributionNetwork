@@ -9,6 +9,7 @@ import FormControl from '@mui/material/FormControl';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel'
 import { fontSize } from '@mui/system';
+import Tooltip from '@mui/material/Tooltip';
 
 import { styled } from '@mui/system';
 import $ from 'jquery'
@@ -53,8 +54,9 @@ class CreatePost extends React.Component{
 
     handleTextChange = (e) => {
         this.setState({
-            [e.target.name]: e.target.value
+            content: $('#editable_div').text()
         });
+        console.log(this.state);
     }
 
     handleFileChange = (e) => {
@@ -95,12 +97,12 @@ class CreatePost extends React.Component{
 
     componentDidMount(){
         const content_id = 'editable_div';  
-        const limit = 100;
+        const limit = 256;
 
         //limit the number of characters in TextArea 
         function check_charcount(content_id, limit, e) {
             const allowedKeys = (
-                e.key === "BACKSPACE" ||  
+                e.key === "Backspace" ||  
                 e.key === 'End' || 
                 e.key === 'Home' || 
                 e.key === 'ArrowLeft' || 
@@ -124,34 +126,83 @@ class CreatePost extends React.Component{
         var fontsize = $('#'+content_id).css('font-size');
         var lineheight = Math.floor(parseInt(fontsize.replace('px','')) * 1.5);
         var paddingtop = parseInt($('#'+content_id).css('padding-top').replace('px',''));
-        $('#'+content_id).css({'height':lineheight*7+paddingtop*2})
+        $('#'+content_id).css({'height':lineheight*20+paddingtop*2})
         $('img').css({'height':lineheight*2})
+
+        //drag and drop
+        var inputarea = document.getElementById('textarea');
+
+        inputarea.addEventListener(
+            "dragenter",
+            function(e) {
+                e.preventDefault();
+            },
+            false
+        );
+
+        inputarea.addEventListener(
+            "dragover",
+            function(e) {
+                e.preventDefault();
+            },
+            false
+        );
+
+        inputarea.addEventListener(
+            "drop",
+            function(e) {
+                dropHandler(e);
+            },
+            false
+        );
+        
+        const imagebox = document.getElementById('image_box')
+        var dropHandler = function(e) {
+            e.preventDefault(); 
+            console.log('hhhhh');
+            var fileList = e.dataTransfer.files;
+            if (fileList.length == 0) {
+              return;
+            }
+            console.log(fileList);
+            if (fileList[0].type.indexOf("image") === -1) {
+              return;
+            }
+            var reader = new FileReader();
+            var img = document.createElement("img");
+            img.style.margin = '10px';
+            img.style.width = '100px';
+          
+            reader.onload = function(e) {
+              img.src = this.result;
+              inputarea.appendChild(img);
+            };
+            reader.readAsDataURL(fileList[0]);
+          };
+          
+
+
     }
 
     render() {
         return (
             <Box component="form" noValidate onSubmit={this.handleSubmit} sx={{display: 'flex', flexDirection: 'column', }}>
-                <CssTextField
-					margin="normal"
-					required
-					id="content"
-					label="content"
-					name="content"
-					autoComplete="content"
-					autoFocus
-					onChange={this.handleTextChange}
-                    multiline
-                    minRows='5'
-                    maxRows='10'
-                    sx = {{ width: 500}}
-                >
-                </CssTextField>
-                <TextArea contentEditable="true" id='editable_div' suppressContentEditableWarning={true}>
-                    Type here. You can insert images too
-                    <Box sx={{display:'flex', width:'100%', flexWrap: 'wrap'}}>
-                        { this.state.images && <ImageList images={this.state.images}/>}
-                    </Box>
-                </TextArea>
+                <Tooltip title="Type here. You can insert images too" arrow placement='right'>
+                    <TextArea id='textarea'>
+                        <Typography 
+                            id='editable_div'
+                            name="content"
+                            variant='body2' 
+                            contentEditable="true" 
+                            suppressContentEditableWarning={true} 
+                            sx={{borderWidth:0, outline:0}}
+                            onKeyUp={this.handleTextChange}
+                        />
+                        <Box id='image_box' sx={{display:'flex', width:'100%', flexWrap: 'wrap'}}>
+                            { this.state.images && <ImageList images={this.state.images}/>}
+                        </Box>
+                    </TextArea>
+                </Tooltip>
 
                 <Button variant="contained" 
                         component='label' 

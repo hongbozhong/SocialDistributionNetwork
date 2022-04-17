@@ -102,7 +102,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open'}
 );
 
 
-const menuItems = [
+const drawerItems = [
     { 
         text: 'Home', 
         icon: <HomeOutlinedIcon color="secondary" />, 
@@ -144,6 +144,10 @@ export default function HomeLayout() {
         navigate('/join/login');
     }
 
+    const GetMyPosts = () => {
+        window.location.href = '/?user=self';
+    }
+
 
     return (
         <Box sx={{ display: 'flex'}}>
@@ -164,7 +168,7 @@ export default function HomeLayout() {
                     <Typography variant="h6" noWrap component="div" color='secondary' sx ={{flexGrow: 1}}>
                         Meteors
                     </Typography>
-                    <AccountMenu handleLogout={handleLogout}/>
+                    <AccountMenu handleLogout={handleLogout} GetMyPosts={GetMyPosts}/>
                 </Toolbar>
             </AppBar>
             <Drawer 
@@ -182,7 +186,7 @@ export default function HomeLayout() {
                 <Divider />
 
                 <List >
-                {menuItems.map((item) => (
+                {drawerItems.map((item) => (
                     <ListItemButton
                         key={item.text}
                         sx={{
@@ -190,7 +194,7 @@ export default function HomeLayout() {
                             justifyContent: open ? 'initial' : 'center',
                             px: 2.5,
                         }}
-                        onClick = {() => navigate(item.path)}
+                        onClick = {() => window.location.href = item.path}
                     >   
                         <Tooltip title={item.text} arrow placement='right'>
                             <ListItemIcon
@@ -212,7 +216,7 @@ export default function HomeLayout() {
             <Box
                 sx={{ 
                     flexGrow: 1, 
-                    p: 3, 
+                    p: '24px', 
                     height: '100vh',
                     backgroundImage: `url(${BackgroundImage})`,
                     backgroundRepeat: 'no-repeat',

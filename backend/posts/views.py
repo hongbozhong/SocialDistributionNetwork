@@ -21,7 +21,11 @@ class PostView(APIView):
     serializer = PostSerializer
 
     def get(self, request):
-        myposts = request.user.posts.all() if 'public' not in request.query_params else self.model.objects.all()
+        if 'user' not in request.query_params:
+            myposts = self.model.objects.all()
+        else:
+            user_id = request.query_params['user']
+            myposts = request.user.posts.all() if user_id == 'self' else User.objects.get(id=user_id).posts.all()
         if not request.query_params:
             Q_initial = Q()
             for key, val in request.query_params.items():

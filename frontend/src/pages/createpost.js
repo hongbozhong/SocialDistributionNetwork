@@ -179,9 +179,6 @@ class CreatePost extends React.Component{
                 }
             )
         );
-
-
-
     }
 
     render() {

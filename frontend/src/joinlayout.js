@@ -1,7 +1,7 @@
 //material ui
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { Container } from '@mui/material';
+import { Box } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@emotion/react';
 import { blue, green} from '@mui/material/colors';
@@ -42,15 +42,14 @@ export default function JoinLayout() {
 			backgroundSize: 'cover',
 			backgroundPosition: 'center',
 		}}>
-			<Container sx={{
-				  m: 0,
-				  position: 'absolute',
-				  display: 'flex',
-				  top: '50%',
-				  transform: 'translateY(-50%)',
-				  width: '50%',
-				  left: '25%',
-			}}>
+			<Box 
+				sx={{
+					display: 'flex',
+					margin: 'auto',
+					width: '50%',
+					height: '60%'
+				}}
+			>
 				<Grid
 					item
 					xs={false}
@@ -61,32 +60,29 @@ export default function JoinLayout() {
 						backgroundRepeat: 'no-repeat',
 						backgroundSize: 'cover',
 						backgroundPosition: 'center',
-						height:640,
-				}}
+						height:'100%',
+					}}
 				>
-					<Typography variant="h3" sx={{color:'white', textAlign:'center', fontWeight: 'bold', mt:"15%"}}>
+					<Typography variant="h3" 
+						sx={{color:'white', 
+							textAlign:'center', 
+							fontWeight: 'bold', 
+							mt:"15%", 
+							[theme.breakpoints.down('md')]:{fontSize:20},
+							[theme.breakpoints.down('sm')]:{fontSize:0},
+						}}>
 						Join 
-					</Typography>
-					<Typography variant="h3" sx={{color:'white', textAlign:'center', fontWeight: 'bold'}}>
-						the world 
-					</Typography>
-					<Typography variant="h3" sx={{color:'white', textAlign:'center', fontWeight: 'bold'}}>
-						of 
-					</Typography>
-					<Typography variant="h3" sx={{color:'white', textAlign:'center', fontWeight: 'bold'}}>
-						Meteors
-					</Typography>
-					<Typography variant="h3" sx={{color:'white', textAlign:'center', fontWeight: 'bold'}}>
-						Communicate 
-					</Typography>
-					<Typography variant="h3" sx={{color:'white', textAlign:'center', fontWeight: 'bold'}}>
-						with others
+						<br/>the world 
+						<br/>of 
+						<br/>Meteors
+						<br/>Communicate 
+						<br/>with others
 					</Typography>
 				</Grid>
 				<Grid item xs={12} sm={8} md={5}>
 					<Outlet />
 				</Grid>
-			</Container>
+			</Box>
 		</Grid>
 		</ThemeProvider>
 	);

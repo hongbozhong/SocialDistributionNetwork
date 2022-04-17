@@ -14,7 +14,7 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
-export default function AccountMenu({handleLogout}) {
+export default function AccountMenu({handleLogout, GetMyPosts}) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
@@ -79,8 +79,8 @@ export default function AccountMenu({handleLogout}) {
                 <MenuItem>
                     <Avatar /> Profile
                 </MenuItem>
-                <MenuItem>
-                    <Avatar /> My account
+                <MenuItem onClick={GetMyPosts}>
+                    <Avatar /> My Posts
                 </MenuItem>
 
                 <Divider />
